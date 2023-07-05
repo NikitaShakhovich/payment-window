@@ -11,7 +11,7 @@
   <link rel="preload" href="fonts/Inter-SemiBold.ttf" as="font">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 </head>
-<body class="body success">
+<body class="body">
 <!--class  err or success-->
 <div class="container">
   <main class="main">
@@ -162,8 +162,13 @@
 
     // Обработка формы
 
+    const messageDiv = document.querySelector('.message');
+    const body = document.querySelector('body');
+
     button.addEventListener('click', async (event) => {
         event.preventDefault();
+        body.classList.remove('err');
+        body.classList.remove('success');
         button.disabled = true;
         const formData = new FormData(form);
         formData.set('card_number', cardNumberInput.value.replace(/\s/g, ''));
@@ -201,10 +206,11 @@
 
             const result = await response.json();
             console.log('data', result);
-
             button.disabled = false;
         } catch (error) {
             console.log(`ошибка: ${error.message}`);
+            body.classList.add('err');
+            messageDiv.querySelector('.message-text').textContent = error.message;
             button.disabled = false;
         }
     });
