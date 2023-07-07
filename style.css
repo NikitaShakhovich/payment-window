@@ -192,7 +192,7 @@
 
 @media (max-width: 1000px) {
   .attention {
-    width: 235px;
+    width: 250px;
     margin: 0;
     padding: 0 0 24px 0;
     font-size: 16px;
@@ -377,6 +377,12 @@
 
 .cvc-wrapper {
   padding: 0;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .card-input {

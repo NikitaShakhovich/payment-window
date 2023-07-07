@@ -20,7 +20,7 @@
       <div class="check-wrapper">
         <p class="payment-check">Сумма к оплате</p>
         <div class="sum-wrapper">
-          <p class="payment-sum">623.<sup>49</sup></p>
+          <p class="payment-sum"></p>
           <p class="payment-currency">руб.</p>
         </div>
       </div>
@@ -35,7 +35,7 @@
         <div class="form-container">
           <div class="card-number">
           <label class="text-card" for="card_number">Номер карты</label>
-          <input class="card-input" type="text" id="card_number" name="card_number" inputmode="numeric" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="____  ____  ____  ____" maxlength="19" required>
+          <input class="card-input" type="text" id="card_number" name="card_number" placeholder="____  ____  ____  ____" maxlength="19" required>
           </div>
           <div class="date-container">
             <div class="date-wrapper">
@@ -44,12 +44,12 @@
             </div>
             <div class="cvc-wrapper">
               <label class="text-card" for="card_cvc">CVV2/CVC2</label>
-              <input class="card-input" type="text" name="cvc" maxlength="3" inputmode="numeric" pattern="\d+" placeholder="___" id="card_cvc" required>
+              <input class="card-input" type="text" name="cvc" id="card_cvc" maxlength="3" placeholder="___" required>
             </div>
           </div>
           <div class="holder-wrapper">
             <label class="text-card" for="card_name">Имя фамилия</label>
-            <input class="card-input" name="name" id="card_name" type="text" inputmode="text" placeholder="______________________" maxlength="120" required pattern="[A-Za-z]+" title="Введите только символы латинского алфавита">
+            <input class="card-input" name="name" id="card_name" type="text" placeholder="______________________" maxlength="120" required>
           </div>
         </div>
         <div class="button-wrapper">
@@ -71,94 +71,89 @@
 <script>
     $(document).ready(function(){
         $("#card_number").keyup(function () {
-            if (this.value.length == this.maxLength) {
-                $('#date_card').eq(0).focus();
+            if (this.value.length == this.maxLength && this.selectionStart == this.maxLength) {
+                $('#date_card').focus();
+            }
+        });
+
+        $("#date_card").keyup(function () {
+            if (this.value.length == this.maxLength && this.selectionStart == this.maxLength) {
+                $('#card_cvc').focus();
+            }
+        });
+
+        $("#card_cvc").keyup(function () {
+            if (this.value.length <= this.maxLength && this.selectionStart == this.maxLength) {
+                $('#card_name').focus();
             }
         });
     });
 
-    $("#date_card").keyup(function () {
-        if (this.value.length == this.maxLength) {
-            $('#card_cvc').eq(0).focus();
-        }
-    });
 
-    $("#date_card").eq(1).keyup(function () {
-        if (this.value.length == this.maxLength) {
-            $('#card_cvc').eq(0).focus();
-        }
-    });
-
-    $("#card_cvc").eq(0).keyup(function () {
-        if (this.value.length == this.maxLength) {
-            $('#card_name').eq(0).focus();
-        }
-    });
-
-    const paymentSum = document.querySelector('.payment-sum');
-    const amount = paymentSum.textContent;
+    const paymentSum = document.querySelector(".payment-sum");
     const button = document.querySelector('.card-submit');
     const paymentCurrency = document.querySelector('.payment-currency')
-    const currency = paymentCurrency.textContent;
     const form = document.querySelector('.form-payment');
     const cardNumberInput = document.querySelector('#card_number');
     const cardHolder = document.querySelector('#card_name');
     const expiryInput = document.querySelector('#date_card');
-    const cvcInput = document.querySelector('#card_cvc');
+    const title = document.querySelector('.payment-title');
 
-    button.textContent = 'Оплатить ' + amount + ' ' + currency;
+    form.addEventListener('input', (evt) => {
+        const input = evt.target;
+        const inputValue = input.value;
 
-    // Держатель карточки
+        // Держатель карточки
+        if (input.id === 'card_name') {
 
-    cardHolder.addEventListener('input', function(event) {
-        const regex = /^[a-zA-Z\s-]*$/;
-        if (!regex.test(this.value)) {
-            this.value = this.value.slice(0, -1);
-        }
-    });
-
-    // Номер карточки
-
-    cardNumberInput.addEventListener('input', (event) => {
-        const input = event.target;
-        const inputLength = input.value.length;
-
-        // Ограничиваем ввод, только цифры и пробелы
-        const value = cardNumberInput.value;
-        cardNumberInput.value = value.replace(/[^0-9\s]/g, '')
-
-        // Разделяем введенные символы на группы по четыре
-        if (inputLength > 0 && inputLength % 5 === 0) {
-            input.value = input.value.slice(0, inputLength - 1) + ' ' + input.value.slice(inputLength - 1);
-        }
-    });
-
-    // Дата карточки
-
-    expiryInput.addEventListener('input', (event) => {
-        const input = event.target;
-        let inputValue = input.value;
-
-        // удаляем все символы, кроме цифр
-        inputValue = inputValue.replace(/\D/g, '');
-        const inputLength = inputValue.length;
-
-        // добавляем символ "/" в поле с датой
-        if (inputLength === 2 && inputValue.indexOf('/') === -1) {
-            inputValue = `${inputValue}/`;
-        } else if (inputLength > 2) {
-            inputValue = `${inputValue.slice(0, 2)}/${inputValue.slice(2)}`;
+            const regex = /^[a-zA-Z\s-]*$/;
+            if (!regex.test(inputValue)) {
+                input.value = inputValue.slice(0, -1);
+            }
         }
 
-        input.value = inputValue;
+        // Номер карточки
+        if (input.id === 'card_number') {
+
+            const value = inputValue.replace(/[^0-9\s]/g, '')
+
+            // Разделяем введенные символы на группы по четыре
+            const groups = value.match(/\d{1,4}/g)
+            const formattedValue = groups ? groups.join(' ') : ''
+
+            // Устанавливаем отформатированное значение поля
+            input.value = formattedValue
+
+            // Проверяем, был ли введен пробел, и если это так, удаляем его
+            const lastChar = input.value.slice(-1)
+            if (lastChar === ' ' && inputValue.slice(-1) !== ' ') {
+                input.value = input.value.slice(0, -1)
+            }
+        }
+
+        // Дата карточки
+        if (input.id === 'date_card') {
+            let inputValue = input.value;
+
+            // удаляем все символы, кроме цифр
+            inputValue = inputValue.replace(/\D/g, '');
+            const inputLength = inputValue.length;
+
+            // добавляем символ "/" в поле с датой
+            if (inputLength === 2 && inputValue.indexOf('/') === -1) {
+                inputValue = `${inputValue}/`;
+            } else if (inputLength > 2) {
+                inputValue = `${inputValue.slice(0, 2)}/${inputValue.slice(2)}`;
+            }
+
+            input.value = inputValue;
+        }
+
+        // CVC карточки
+        if(input.id === 'card_cvc') {
+            input.value = inputValue.replace(/[^0-9]/g, '');
+        }
     });
-
-    // CVC карточки
-
-    cvcInput.addEventListener('input', (event) => {
-        const cvcValue = cvcInput.value
-        cvcInput.value = cvcValue.replace(/[^0-9]/g, '');
-    })
 
     // Обработка формы
 
@@ -169,51 +164,86 @@
         event.preventDefault();
         body.classList.remove('err');
         body.classList.remove('success');
-        button.disabled = true;
+
         const formData = new FormData(form);
         formData.set('card_number', cardNumberInput.value.replace(/\s/g, ''));
 
         const dateValue = expiryInput.value;
         const [month, year] = dateValue.split('/');
-        const dateObj = {
-            month,
-            year,
-        };
-        formData.set('date_card', JSON.stringify(dateObj));
+        formData.set('date_card', JSON.stringify({month, year,}));
         const nameValue = cardHolder.value.toUpperCase();
         const [FName, LName] = nameValue.split(' ');
-        const nameObj = {
-            FName,
-            LName,
-        };
-        formData.set('name', JSON.stringify(nameObj));
+        formData.set('name', JSON.stringify({ FName, LName,}));
 
         console.log(typeof cardNumberInput.value);
 
-        const url = 'http://example.com/your-api-endpoint';
+        const url = '/card_info';
+
+        form.querySelectorAll('input, button').forEach((el) => {
+            el.disabled = true;
+        });
 
         try {
             const response = await fetch(url, {
                 method: 'POST',
                 body: formData,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
 
             if (response.ok) {
-                window.location.replace('https://www.google.com');
+                const result = await response.json();
+                console.log('data', result);
+                window.location.replace(result.link);
+            } else if (response.status === 404) {
+                throw new Error("Ресурс не найден. 404 (Not Found)");
             } else {
-                throw new Error(`Ошибка ${response.status}: ${response.statusText}`)
+                const errorData = await response.json();
+                if (errorData.status === "Error" && errorData.info === "Invalid info") {
+                    throw new Error("Ошибка в данных карты");
+                } else if (errorData.status === "Error" && errorData.info === "Data cant be send") {
+                    console.log("Ошибка при отправке данных на сервер. Повторите попытку");
+                } else {
+                    throw new Error(`Ошибка ${errorData.status}: ${errorData.statusText}`)
+                }
             }
 
-            const result = await response.json();
-            console.log('data', result);
-            button.disabled = false;
         } catch (error) {
             console.log(`ошибка: ${error.message}`);
             body.classList.add('err');
-            messageDiv.querySelector('.message-text').textContent = error.message;
-            button.disabled = false;
+            if (error.message === 'Failed to fetch') {
+                messageDiv.querySelector('.message-text').textContent = 'Ошибка соединения';
+            } else {
+                messageDiv.querySelector('.message-text').textContent = error.message;
+            }
         }
+
+        form.querySelectorAll('input, button').forEach((el) => {
+            el.disabled = false;
+        });
+
     });
+
+    // get-параметры стоимость и тайтл
+
+    // const url = window.location.href;
+
+    const url = 'http%3A%2F%2Flocalhost%3A63342%2Fpayment-window%2Findex.html%3F_ijt%3Ders9osbkebnsmt6letg0oe0j3o%26price%3D323%26title%3D%D0%9E%D0%BF%D0%BB%D0%B0%D1%82%D0%B0'
+    const decodeUrl = decodeURIComponent(url);
+    const urlObject = new URL(decodeUrl);
+
+    const priceValue = urlObject.searchParams.get('price');
+    const titleValue = urlObject.searchParams.get('title');
+
+    title.textContent = titleValue;
+
+    const number = parseFloat(priceValue);
+    const integerPart = Math.floor(number);
+    const decimalPart = (number % 1).toFixed(2).substr(2);
+    paymentSum.innerHTML = `${integerPart}.<sup>${decimalPart}</sup>`;
+
+    button.textContent = 'Оплатить ' + paymentSum.textContent + ' ' + paymentCurrency.textContent;
 </script>
 </body>
 </html>
