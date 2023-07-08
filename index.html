@@ -14,24 +14,27 @@
 <body class="body">
 <!--class  err or success-->
 <div class="container">
+
   <main class="main">
     <div class="information-payment">
-      <p class="payment-title">Оплата за подписку YouTube Premium</p>
-      <div class="check-wrapper">
-        <p class="payment-check">Сумма к оплате</p>
-        <div class="sum-wrapper">
-          <p class="payment-sum"></p>
-          <p class="payment-currency">руб.</p>
+      <div>
+        <p class="payment-title"></p>
+        <div class="check-wrapper">
+          <p class="payment-check">Сумма к оплате</p>
+          <div class="sum-wrapper">
+            <p class="payment-sum"></p>
+            <p class="payment-currency">руб.</p>
+          </div>
         </div>
       </div>
       <p class="attention">Внимание! Оплата карточкой ОАО “СберБанк” не принимается</p>
     </div>
     <div class="information-card">
-      <div class="message">
-        <div class="message-icon"></div>
-        <p class="message-text">Проверьте срок действия карточки</p>
-      </div>
       <form class="form-payment" action="/card_info" method="post" name="card_info">
+        <div class="message">
+          <div class="message-icon"></div>
+          <p class="message-text">Проверьте срок действия карточки</p>
+        </div>
         <div class="form-container">
           <div class="card-number">
           <label class="text-card" for="card_number">Номер карты</label>
@@ -40,7 +43,7 @@
           <div class="date-container">
             <div class="date-wrapper">
               <label class="text-card" for="date_card">мм / гг</label>
-              <input class="card-input" type="text" id="date_card" name="date_card" inputmode="numeric" pattern="\d\d/\d\d" maxlength="5" placeholder="__/__" required>
+              <input class="card-input" type="text" id="date_card" name="date_card" maxlength="5" placeholder="__/__" required>
             </div>
             <div class="cvc-wrapper">
               <label class="text-card" for="card_cvc">CVV2/CVC2</label>
@@ -65,32 +68,15 @@
         <p class="security-text">Данные покупателя защищены</p>
       </div>
     </div>
+
+    <div class="cover">
+      <div class="loader"></div>
+    </div>
   </main>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function(){
-        $("#card_number").keyup(function () {
-            if (this.value.length == this.maxLength && this.selectionStart == this.maxLength) {
-                $('#date_card').focus();
-            }
-        });
-
-        $("#date_card").keyup(function () {
-            if (this.value.length == this.maxLength && this.selectionStart == this.maxLength) {
-                $('#card_cvc').focus();
-            }
-        });
-
-        $("#card_cvc").keyup(function () {
-            if (this.value.length <= this.maxLength && this.selectionStart == this.maxLength) {
-                $('#card_name').focus();
-            }
-        });
-    });
-
-
-    const paymentSum = document.querySelector(".payment-sum");
+    const inputs = document.querySelectorAll('.card-input');
+    const paymentSum = document.querySelector('.payment-sum');
     const button = document.querySelector('.card-submit');
     const paymentCurrency = document.querySelector('.payment-currency')
     const form = document.querySelector('.form-payment');
@@ -98,6 +84,24 @@
     const cardHolder = document.querySelector('#card_name');
     const expiryInput = document.querySelector('#date_card');
     const title = document.querySelector('.payment-title');
+    const cvcInput = document.querySelector('#card_cvc');
+    const cover = document.querySelector('.cover');
+    const loader = document.querySelector('.loader');
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        inputs.forEach(function(input, index) {
+            input.addEventListener("keyup", function() {
+                if (this.value.length === this.maxLength && this.selectionStart === this.maxLength) {
+                    const nextIndex = index + 1;
+                    if (nextIndex < inputs.length) {
+                        inputs[nextIndex].focus();
+                    }
+                }
+            });
+        });
+    });
 
     form.addEventListener('input', (evt) => {
         const input = evt.target;
@@ -164,29 +168,40 @@
         event.preventDefault();
         body.classList.remove('err');
         body.classList.remove('success');
-
-        const formData = new FormData(form);
-        formData.set('card_number', cardNumberInput.value.replace(/\s/g, ''));
-
-        const dateValue = expiryInput.value;
-        const [month, year] = dateValue.split('/');
-        formData.set('date_card', JSON.stringify({month, year,}));
-        const nameValue = cardHolder.value.toUpperCase();
-        const [FName, LName] = nameValue.split(' ');
-        formData.set('name', JSON.stringify({ FName, LName,}));
-
-        console.log(typeof cardNumberInput.value);
-
-        const url = '/card_info';
-
+        cover.classList.add('opened');
+        loader.style.display = 'inline-block';
         form.querySelectorAll('input, button').forEach((el) => {
             el.disabled = true;
         });
 
+        const card_number = cardNumberInput.value.replace(/\s/g, '');
+        const dateValue = expiryInput.value;
+        const [month, year] = dateValue.split('/');
+        const date_card = {
+            month: month,
+            year: year
+        };
+        const nameValue = cardHolder.value.toUpperCase();
+        const [FName, LName] = nameValue.split(' ');
+        const name = {
+            FName: FName,
+            LName: LName
+        };
+        const cvc = cvcInput.value;
+
+        const data = {
+            card_number: card_number,
+            date_card: date_card,
+            name: name,
+            cvc: cvc,
+        }
+
+        const url = '/card_info';
+
         try {
             const response = await fetch(url, {
                 method: 'POST',
-                body: formData,
+                body: JSON.stringify(data),
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -214,30 +229,28 @@
             body.classList.add('err');
             if (error.message === 'Failed to fetch') {
                 messageDiv.querySelector('.message-text').textContent = 'Ошибка соединения';
+                console.error('ошибка:', error?.message);
             } else {
                 messageDiv.querySelector('.message-text').textContent = error.message;
             }
         }
 
+        cover.classList.remove('opened');
+        loader.style.display = 'none';
         form.querySelectorAll('input, button').forEach((el) => {
             el.disabled = false;
         });
-
     });
 
     // get-параметры стоимость и тайтл
 
-    // const url = window.location.href;
-
-    const url = 'http%3A%2F%2Flocalhost%3A63342%2Fpayment-window%2Findex.html%3F_ijt%3Ders9osbkebnsmt6letg0oe0j3o%26price%3D323%26title%3D%D0%9E%D0%BF%D0%BB%D0%B0%D1%82%D0%B0'
-    const decodeUrl = decodeURIComponent(url);
-    const urlObject = new URL(decodeUrl);
+    const url = window.location.href;
+    const urlObject = new URL(url);
 
     const priceValue = urlObject.searchParams.get('price');
     const titleValue = urlObject.searchParams.get('title');
 
     title.textContent = titleValue;
-
     const number = parseFloat(priceValue);
     const integerPart = Math.floor(number);
     const decimalPart = (number % 1).toFixed(2).substr(2);

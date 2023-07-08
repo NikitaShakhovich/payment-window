@@ -7,7 +7,14 @@
   justify-content: center;
   align-items: center;
   height: 100%;
+  padding: 30px 30px 30px 30px;
   background: #7e7b7b;
+}
+
+@media (max-width: 1000px) {
+  .html {
+    padding: 0;
+  }
 }
 
 .body {
@@ -47,9 +54,12 @@
 
 .information-payment {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 100%;
   max-width: 500px;
-  padding: 0;
+  padding: 150px 0 150px 0;
 }
 
 @media (max-width: 1000px) {
@@ -79,7 +89,7 @@
 .payment-title {
   width: 300px;
   margin: 0 auto;
-  padding: 150px 0 80px 0;
+  padding: 0 0 60px 0;
   font-style: normal;
   font-weight: 600;
   font-size: 30px;
@@ -181,7 +191,7 @@
 
 .attention {
   width: 295px;
-  padding: 170px 0 165px 0;
+  padding: 0;
   margin: 0 auto;
   font-style: normal;
   font-weight: 400;
@@ -216,20 +226,37 @@
 @media (max-width: 1000px) {
   .message {
     min-height: 37px;
-    margin: 0 auto 24px auto;
   }
 }
 
 .err .message {
+  position: absolute;
+  top: -15%;
   display: flex;
   border: 1px solid #eb5757;
   background: #fff0f0;
 }
 
+@media (max-width: 1000px) {
+  .err .message {
+    bottom: 20px;
+    top: unset;
+  }
+}
+
 .success .message {
+  position: absolute;
+  top: -15%;
   display: flex;
   border: 1px solid #27ae60;
   background: #e8fff1;
+}
+
+@media (max-width: 1000px) {
+  .success .message {
+    bottom: 20px;
+    top: unset;
+  }
 }
 
 .message-text {
@@ -282,6 +309,7 @@
   max-width: 940px;
   min-width: 650px;
   width: 100%;
+  padding: 150px 0 0 0;
 }
 
 @media (max-width: 1000px) {
@@ -291,10 +319,20 @@
   }
 }
 
-.form-container {
+.form-payment {
+  position: relative;
   width: 590px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1000px) {
+  .form-payment {
+    width: 328px;
+  }
+}
+
+.form-container {
   height: 355px;
-  margin: 20px auto 0 auto;
   padding: 50px 50px 50px 50px;
   border-radius: 20px;
   box-shadow: 0 70px 25px -45px rgba(66, 121, 239, 0.5);
@@ -303,7 +341,6 @@
 
 @media (max-width: 1000px) {
   .form-container {
-    width: 328px;
     height: 210px;
     padding: 25px 23px 25px 23px;
     margin: 0;
@@ -324,7 +361,7 @@
 
 @media (max-width: 1000px) {
   .text-card {
-    font-size: 14px;
+    font-size: 12px;
     line-height: 16px;
   }
 }
@@ -404,7 +441,7 @@ input[type="number"]::-webkit-outer-spin-button {
 @media (max-width: 1000px) {
   .card-input {
     padding: 5px 0 0 0;
-    font-size: 16px;
+    font-size: 17px;
     line-height: 19px;
     letter-spacing: 3px;
   }
@@ -433,7 +470,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 @media (max-width: 1000px) {
   .button-wrapper {
-    padding: 24px 0 55px 0;
+    padding: 24px 0 70px 0;
   }
 }
 
@@ -508,7 +545,7 @@ input[type="number"]::-webkit-outer-spin-button {
 @media (max-width: 1000px) {
   .security-container {
     justify-content: center;
-    padding: 0 0 65px 0;
+    padding: 0 0 50px 0;
   }
 }
 
@@ -541,5 +578,77 @@ input[type="number"]::-webkit-outer-spin-button {
   .svg-shield {
     height: 21px;
     width: 17px;
+  }
+}
+
+.cover {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.4);
+  z-index: 21;
+}
+
+.opened {
+  display: flex;
+}
+
+.loader:after {
+  content: "";
+  display: inline-block;
+  font-size: 6.2px;
+  margin-top: 40px;
+  border: 1.2em solid #808080;
+  border-right-color: rgba(128,128,128, 0) !important;
+  transform: translateZ(0);
+  animation: spiner 1s infinite cubic-bezier(0.53, 0.21, 0.57, 0.85), colors 3s infinite cubic-bezier(0.45, -0.03, 1, 0.77);
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  right: calc(50% - 5em);
+  z-index: 30;
+}
+
+@media (max-width: 1000px) {
+  .loader:after{
+    width: 5em;
+    height: 5em;
+    right: calc(50% - 2em);
+  }
+}
+
+@keyframes colors {
+  0% {
+    border-color: #a0a0a0;
+    border-bottom-color: transparent;
+  }
+  33% {
+    border-color: #c0c0c0;
+    border-bottom-color: transparent;
+  }
+  66% {
+    border-color: #e0e0e0;
+    border-bottom-color: transparent;
+  }
+  100% {
+    border-color: #a0a0a0;
+    border-bottom-color: transparent;
+  }
+}
+
+@keyframes spiner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(720deg);
   }
 }
