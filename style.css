@@ -2,38 +2,36 @@
   box-sizing: border-box;
 }
 
-.html {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  padding: 30px 30px 30px 30px;
-  background: #7e7b7b;
-}
-
-@media (max-width: 1000px) {
-  .html {
-    padding: 0;
-  }
-}
-
 .body {
-  width: 100%;
-  margin: 0 auto;
-  max-width: 1440px;
+  padding: 30px 30px 30px 30px;
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
   color: #000000;
   font-weight: 400;
+  background: #7e7b7b;
+
+}
+
+@media (max-width: 1050px) {
+  .body {
+    padding: 0;
+  }
+}
+
+.container {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1440px;
   border-radius: 20px;
   background: #ffffff;
 }
 
-@media (max-width: 1000px) {
-  .body {
+
+@media (max-width: 1050px) {
+  .container {
     max-width: 360px;
-    border-radius: 0;
+    border-radius: 10px;
   }
 }
 
@@ -45,7 +43,7 @@
   font-family: 'Inter', sans-serif;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .main {
     flex-direction: column;
     padding: 0 16px 0 16px;
@@ -59,10 +57,10 @@
   justify-content: space-between;
   width: 100%;
   max-width: 500px;
-  padding: 150px 0 150px 0;
+  padding: 150px 0 150px 30px;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .information-payment {
     width: 100%;
     padding: 0;
@@ -80,7 +78,7 @@
   opacity: 0.2;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .information-payment::before {
     display: none;
   }
@@ -97,7 +95,7 @@
   color: #101010;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .payment-title {
     padding: 50px 0 40px 0;
     margin: 0 auto;
@@ -107,7 +105,7 @@
   }
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .check-wrapper {
     display: flex;
     justify-content: center;
@@ -127,7 +125,7 @@
   color: #B3B4B6;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .payment-check {
     margin: 0;
     font-size: 18px;
@@ -145,7 +143,7 @@
   width: 300px;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .sum-wrapper {
     justify-content: end;
     padding: 0;
@@ -163,7 +161,7 @@
   color: #101010;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .payment-sum {
     margin: 0;
     font-weight: 700;
@@ -182,7 +180,7 @@
   color: #B3B4B6;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .payment-currency {
     font-size: 18px;
     line-height: 22px;
@@ -200,7 +198,7 @@
   color: #B3B4B6;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .attention {
     width: 250px;
     margin: 0;
@@ -223,7 +221,7 @@
   border-radius: 10px;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .message {
     min-height: 37px;
   }
@@ -237,7 +235,7 @@
   background: #fff0f0;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .err .message {
     bottom: 20px;
     top: unset;
@@ -252,7 +250,7 @@
   background: #e8fff1;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .success .message {
     bottom: 20px;
     top: unset;
@@ -265,7 +263,7 @@
   font-size: 20px;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .message-text {
     font-size: 14px;
   }
@@ -287,7 +285,7 @@
   background-size: contain;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .message-icon {
     min-width: 16px;
     height: 16px;
@@ -309,10 +307,10 @@
   max-width: 940px;
   min-width: 650px;
   width: 100%;
-  padding: 150px 0 0 0;
+  padding: 150px 30px 0 30px;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .information-card {
     min-width: 328px;
     padding: 0;
@@ -325,7 +323,7 @@
   margin: 0 auto;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .form-payment {
     width: 328px;
   }
@@ -339,7 +337,7 @@
   background: #4279ee;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .form-container {
     height: 210px;
     padding: 25px 23px 25px 23px;
@@ -359,7 +357,7 @@
   opacity: 0.7;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .text-card {
     font-size: 12px;
     line-height: 16px;
@@ -371,7 +369,7 @@
   color: #ffffff;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .card-number {
     padding: 0 0 10px 0;
   }
@@ -387,7 +385,7 @@
   padding: 0 0 30px 0;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .date-container {
     padding: 0 0 10px 0;
   }
@@ -406,7 +404,7 @@
   opacity: 0.3;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .divider {
     font-size: 19px;
   }
@@ -438,7 +436,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .card-input {
     padding: 5px 0 0 0;
     font-size: 17px;
@@ -468,7 +466,7 @@ input[type="number"]::-webkit-outer-spin-button {
   padding: 70px 0 55px 0;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .button-wrapper {
     padding: 24px 0 70px 0;
   }
@@ -498,7 +496,7 @@ input[type="number"]::-webkit-outer-spin-button {
   background: #4279ee;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .card-submit {
     padding: 15px;
     font-size: 18px;
@@ -511,7 +509,7 @@ input[type="number"]::-webkit-outer-spin-button {
   background: #346ad2;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .card-submit:hover {
     background: #4279ee;
   }
@@ -521,7 +519,7 @@ input[type="number"]::-webkit-outer-spin-button {
   box-shadow: 0 15px 15px -8px rgba(66, 121, 239, 0.5);
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .card-submit:active {
     box-shadow: none;
   }
@@ -539,10 +537,10 @@ input[type="number"]::-webkit-outer-spin-button {
   justify-content: end;
   align-items: center;
   gap: 10px;
-  padding: 0 40px 40px 0;
+  padding: 0 0 40px 0;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .security-container {
     justify-content: center;
     padding: 0 0 50px 0;
@@ -560,7 +558,7 @@ input[type="number"]::-webkit-outer-spin-button {
   color: #b3b4b6;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .security-text {
     width: 205px;
     font-size: 14px;
@@ -574,7 +572,7 @@ input[type="number"]::-webkit-outer-spin-button {
   align-items: center;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .svg-shield {
     height: 21px;
     width: 17px;
@@ -617,7 +615,7 @@ input[type="number"]::-webkit-outer-spin-button {
   z-index: 30;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1050px) {
   .loader:after{
     width: 5em;
     height: 5em;
