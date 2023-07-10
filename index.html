@@ -208,26 +208,23 @@
             if (response.ok) {
                 const result = await response.json();
                 console.log('data', result);
-                window.location.replace(result.link);
-            } else if (response.status === 404) {
-                throw new Error("Ресурс не найден. 404 (Not Found)");
-            } else {
-                const errorData = await response.json();
-                if (errorData.status === "Error" && errorData.info === "Invalid info") {
-                    throw new Error("Ошибка в данных карты");
-                } else if (errorData.status === "Error" && errorData.info === "Data cant be send") {
-                    console.log("Ошибка при отправке данных на сервер. Повторите попытку");
+
+                if (result.status === "Error") {
+                    throw new Error(result.info);
                 } else {
-                    throw new Error(`Ошибка ${errorData.status}: ${errorData.statusText}`)
+                    window.location.replace(result.link);
                 }
+
+            } else {
+                console.error('ошибка:', error?.message);
+                throw new Error("Проблемы с сетью");
             }
 
         } catch (error) {
-            console.log(`ошибка: ${error.message}`);
+            console.error('ошибка:', error?.message);
             body.classList.add('err');
             if (error.message === 'Failed to fetch') {
                 messageDiv.querySelector('.message-text').textContent = 'Ошибка соединения';
-                console.error('ошибка:', error?.message);
             } else {
                 messageDiv.querySelector('.message-text').textContent = error.message;
             }
