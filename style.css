@@ -560,9 +560,10 @@ input[type="number"]::-webkit-outer-spin-button {
 
 @media (max-width: 1050px) {
   .security-text {
-    width: 205px;
+    min-width: 215px;
     font-size: 14px;
     line-height: 17px;
+    text-align: center;
   }
 }
 
