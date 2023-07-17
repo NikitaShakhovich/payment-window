@@ -293,11 +293,12 @@
 }
 
 .err .message-icon {
-  background-image: url("svg/attention.svg");
+  background-image: url("../svg/attention.svg");
 }
 
 .success .message-icon {
-  background-image: url("svg/success.svg");
+  background-image: url("../svg/success.svg");
+
 }
 
 .information-card {
